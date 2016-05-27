@@ -3,9 +3,9 @@ package gtimeentry
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dougEfresh/gtoggl"
-	"github.com/dougEfresh/gtoggl/gproject"
-	"github.com/dougEfresh/gtoggl/gworkspace"
+	"gopkg.in/dougEfresh/gtoggl.v8"
+	"gopkg.in/dougEfresh/gproject.v8"
+	"gopkg.in/dougEfresh/gworkspace.v8"
 	"time"
 )
 
