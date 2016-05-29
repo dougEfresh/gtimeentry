@@ -3,9 +3,9 @@ package gtimeentry
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/dougEfresh/gtoggl.v8"
-	"gopkg.in/dougEfresh/gproject.v8"
-	"gopkg.in/dougEfresh/gworkspace.v8"
+	"gopkg.in/dougEfresh/toggl-http-client.v8"
+	"gopkg.in/dougEfresh/toggl-workspace.v8"
+	"gopkg.in/dougEfresh/toggl-project.v8"
 	"time"
 )
 
@@ -34,24 +34,18 @@ const EndpointStart = Endpoint + "/start"
 //Return a UserClient. An error is also returned when some configuration option is invalid
 //    thc,err := gtoggl.NewClient("token")
 //    uc,err := guser.NewClient(thc)
-func NewClient(thc *gtoggl.TogglHttpClient, options ...ClientOptionFunc) (*TimeEntryClient, error) {
+func NewClient(thc *ghttp.TogglHttpClient) *TimeEntryClient {
 	tc := &TimeEntryClient{
 		thc: thc,
-	}
-	// Run the options on it
-	for _, option := range options {
-		if err := option(tc); err != nil {
-			return nil, err
-		}
 	}
 	tc.endpoint = thc.Url + Endpoint
 	tc.currentEndpoint = thc.Url + EndpointCurrent
 	tc.startEndpoint = thc.Url + EndpointStart
-	return tc, nil
+	return tc
 }
 
 type TimeEntryClient struct {
-	thc             *gtoggl.TogglHttpClient
+	thc             *ghttp.TogglHttpClient
 	endpoint        string
 	startEndpoint   string
 	currentEndpoint string
@@ -78,7 +72,7 @@ func (c *TimeEntryClient) List() (TimeEntries, error) {
 
 func (c *TimeEntryClient) Create(t *TimeEntry) (*TimeEntry, error) {
 	if len(t.CreatedWith) < 0 {
-		t.CreatedWith = gtoggl.TogglCreator
+		t.CreatedWith = "gtoggl"
 	}
 	up := createRequest{TimeEntry: t}
 	body, err := json.Marshal(up)
@@ -101,7 +95,7 @@ func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, erro
 	if error != nil {
 		return nil, error
 	}
-	var tResp gtoggl.TogglResponse
+	var tResp ghttp.TogglResponse
 	err := json.Unmarshal(*response, &tResp)
 	if err != nil {
 		return nil, err
@@ -113,16 +107,6 @@ func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, erro
 	}
 	return &t, err
 }
-
-//Configures a Client.
-/*
-    func SetURL(url string) ToggleClientOptionFunc {
-	return func(c *TogglClient) error {
-	    c.Url = url
-	}
-    }
-*/
-type ClientOptionFunc func(*TimeEntryClient) error
 
 type updateRequest struct {
 	TimeEntry *TimeEntry `json:"time_entry"`
