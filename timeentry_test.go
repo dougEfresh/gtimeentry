@@ -2,73 +2,18 @@ package gtimeentry
 
 import (
 	"github.com/dougEfresh/toggl-test"
-	"os"
 	"testing"
 	"time"
 )
 
-var _, debugMode = os.LookupEnv("GTOGGL_TEST_DEBUG")
-
-func togglClient() *TimeEntryClient {
-	tu := &gtest.TestUtil{Debug: debugMode}
-	client := tu.MockClient()
-	ws, err := NewClient(client)
-	if err != nil {
-		panic(err)
-	}
-	return ws
+func togglClient(t *testing.T) *TimeEntryClient {
+	tu := &gtest.TestUtil{}
+	client := tu.MockClient(t)
+	return NewClient(client)
 }
-
-/*
-func TestUserCreate(t *testing.T) {
-	tClient := togglClient()
-	nc, err := tClient.Create("signup@blah.com", "StrongPasswrod", "UTC")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if nc.Id != 3 {
-		t.Fatal("!= 3")
-	}
-
-	if nc.Email != "signup@blah.com" {
-		t.Fatal("!= signup@blah.com")
-	}
-
-	if nc.ApiToken != "808lolae4eab897cce9729a53642124effe" {
-		t.Fatal("!= 808lolae4eab897cce9729a53642124effe")
-	}
-}
-
-func TestUserUpdate(t *testing.T) {
-	tClient := togglClient()
-	c := &User{Id: 1, FullName: "John Swift", Email: "newemail@swift.com"}
-	nc, err := tClient.Update(c)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if nc.Email != "newemail@swift.com" {
-		t.Fatal("!= newemail@swift.com")
-	}
-}
-
-func TestUserReset(t *testing.T) {
-	tClient := togglClient()
-	token, err := tClient.ResetToken()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if token != "123456789" {
-		t.Fatal("!= 123456789")
-	}
-}
-
-*/
 
 func TestTimeEntryDelete(t *testing.T) {
-	tClient := togglClient()
+	tClient := togglClient(t)
 	err := tClient.Delete(1)
 	if err != nil {
 		t.Fatal(err)
@@ -76,7 +21,7 @@ func TestTimeEntryDelete(t *testing.T) {
 }
 
 func TestTimeEntryList(t *testing.T) {
-	tClient := togglClient()
+	tClient := togglClient(t)
 	te, err := tClient.List()
 	if err != nil {
 		t.Fatal(err)
@@ -88,7 +33,7 @@ func TestTimeEntryList(t *testing.T) {
 }
 
 func TestTimeEntryCreate(t *testing.T) {
-	tClient := togglClient()
+	tClient := togglClient(t)
 
 	te := &TimeEntry{}
 	te.Billable = false
@@ -109,7 +54,7 @@ func TestTimeEntryCreate(t *testing.T) {
 }
 
 func TestTimeEntryUpdate(t *testing.T) {
-	tClient := togglClient()
+	tClient := togglClient(t)
 	te, err := tClient.Get(1)
 	if err != nil {
 		t.Fatal(err)
@@ -125,7 +70,7 @@ func TestTimeEntryUpdate(t *testing.T) {
 }
 
 func TestTimeEntryGet(t *testing.T) {
-	tClient := togglClient()
+	tClient := togglClient(t)
 
 	timeentry, err := tClient.Get(1)
 	if err != nil {
@@ -163,12 +108,4 @@ func TestTimeEntryGet(t *testing.T) {
 			t.Error("!= johnt@swift.com" + timeentry.Email)
 		}
 	*/
-}
-
-func BenchmarkClientTransport_Get(b *testing.B) {
-	b.ReportAllocs()
-	tClient := togglClient()
-	for i := 0; i < b.N; i++ {
-		tClient.Get(1)
-	}
 }
