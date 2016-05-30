@@ -66,6 +66,9 @@ func (c *TimeEntryClient) List() (TimeEntries, error) {
 	if err != nil {
 		return te, err
 	}
+	if body == nil {
+		return nil, nil
+	}
 	err = json.Unmarshal(*body, &te)
 	return te, err
 }
@@ -94,6 +97,9 @@ func (c *TimeEntryClient) Update(t *TimeEntry) (*TimeEntry, error) {
 func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, error) {
 	if error != nil {
 		return nil, error
+	}
+	if response == nil {
+		return nil, nil
 	}
 	var tResp ghttp.TogglResponse
 	err := json.Unmarshal(*response, &tResp)
