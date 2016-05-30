@@ -77,21 +77,13 @@ func (c *TimeEntryClient) Create(t *TimeEntry) (*TimeEntry, error) {
 	if len(t.CreatedWith) < 0 {
 		t.CreatedWith = "gtoggl"
 	}
-	up := createRequest{TimeEntry: t}
-	body, err := json.Marshal(up)
-	if err != nil {
-		return nil, err
-	}
-	return timeEntryResponse(c.thc.PutRequest(c.endpoint, body))
+	up := map[string]interface{} {"time_entry" : t}
+	return timeEntryResponse(c.thc.PutRequest(c.endpoint, up))
 }
 
 func (c *TimeEntryClient) Update(t *TimeEntry) (*TimeEntry, error) {
-	up := updateRequest{TimeEntry: t}
-	body, err := json.Marshal(up)
-	if err != nil {
-		return nil, err
-	}
-	return timeEntryResponse(c.thc.PutRequest(fmt.Sprintf("%s/%d", c.endpoint, t.Id), body))
+	up := map[string]interface{} {"time_entry" : t}
+	return timeEntryResponse(c.thc.PutRequest(fmt.Sprintf("%s/%d", c.endpoint, t.Id), up))
 }
 
 func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, error) {
@@ -114,9 +106,3 @@ func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, erro
 	return &t, err
 }
 
-type updateRequest struct {
-	TimeEntry *TimeEntry `json:"time_entry"`
-}
-type createRequest struct {
-	TimeEntry *TimeEntry `json:"time_entry"`
-}
