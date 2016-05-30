@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"gopkg.in/dougEfresh/toggl-http-client.v8"
-	"gopkg.in/dougEfresh/toggl-workspace.v8"
 	"gopkg.in/dougEfresh/toggl-project.v8"
+	"gopkg.in/dougEfresh/toggl-workspace.v8"
 	"time"
 )
 
@@ -77,12 +77,12 @@ func (c *TimeEntryClient) Create(t *TimeEntry) (*TimeEntry, error) {
 	if len(t.CreatedWith) < 0 {
 		t.CreatedWith = "gtoggl"
 	}
-	up := map[string]interface{} {"time_entry" : t}
+	up := map[string]interface{}{"time_entry": t}
 	return timeEntryResponse(c.thc.PutRequest(c.endpoint, up))
 }
 
 func (c *TimeEntryClient) Update(t *TimeEntry) (*TimeEntry, error) {
-	up := map[string]interface{} {"time_entry" : t}
+	up := map[string]interface{}{"time_entry": t}
 	return timeEntryResponse(c.thc.PutRequest(fmt.Sprintf("%s/%d", c.endpoint, t.Id), up))
 }
 
@@ -105,4 +105,3 @@ func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, erro
 	}
 	return &t, err
 }
-
