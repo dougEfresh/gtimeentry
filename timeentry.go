@@ -78,7 +78,7 @@ func (c *TimeEntryClient) Create(t *TimeEntry) (*TimeEntry, error) {
 		t.CreatedWith = "gtoggl"
 	}
 	up := map[string]interface{}{"time_entry": t}
-	return timeEntryResponse(c.thc.PutRequest(c.endpoint, up))
+	return timeEntryResponse(c.thc.PostRequest(c.endpoint, up))
 }
 
 func (c *TimeEntryClient) Update(t *TimeEntry) (*TimeEntry, error) {
