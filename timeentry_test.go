@@ -94,18 +94,15 @@ func TestTimeEntryGet(t *testing.T) {
 	if diff != 0 {
 		t.Errorf("!= %s", diff)
 	}
+}
 
-	/*
-		if timeentry.FullName != "John Swift" {
-			t.Error("!= John Swift:  " + timeentry.FullName)
-		}
+func BenchmarkTimeEntryClient_Get(b *testing.B) {
+	b.ReportAllocs()
+	tClient := togglClient(nil)
 
-		if timeentry.ApiToken != "1971800d4d82861d8f2c1651fea4d212" {
-			t.Error("!= J1971800d4d82861d8f2c1651fea4d212:  " + timeentry.ApiToken)
+	for i := 0; i < b.N; i++ {
+		if _, err := tClient.Get(1); err != nil {
+			b.Fatalf("Get: %v", err)
 		}
-
-		if timeentry.Email != "johnt@swift.com" {
-			t.Error("!= johnt@swift.com" + timeentry.Email)
-		}
-	*/
+	}
 }
