@@ -15,7 +15,7 @@ type TimeEntry struct {
 	Project     *gproject.Project     `json:"project"`
 	Start       time.Time             `json:"start"`
 	Stop        time.Time             `json:"stop"`
-	Duration    uint64                `json:"duration"`
+	Duration    int64                 `json:"duration"`
 	Billable    bool                  `json:"billable"`
 	Workspace   *gworkspace.Workspace `json:"workspace"`
 	Tags        []string              `json:"tags"`
