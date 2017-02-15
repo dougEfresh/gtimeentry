@@ -7,6 +7,7 @@ import (
 	"gopkg.in/dougEfresh/toggl-project.v8"
 	"gopkg.in/dougEfresh/toggl-workspace.v8"
 	"time"
+	"net/url"
 )
 
 type TimeEntry struct {
@@ -84,6 +85,22 @@ func (c *TimeEntryClient) Create(t *TimeEntry) (*TimeEntry, error) {
 func (c *TimeEntryClient) Update(t *TimeEntry) (*TimeEntry, error) {
 	up := map[string]interface{}{"time_entry": t}
 	return timeEntryResponse(c.thc.PutRequest(fmt.Sprintf("%s/%d", c.endpoint, t.Id), up))
+}
+
+func (c *TimeEntryClient) GetRange(start time.Time, end time.Time) (TimeEntries, error) {
+	v := url.Values{}
+	v.Set("start", start.Format(time.RFC3339))
+	v.Set("end", end.Format(time.RFC3339))
+	body, err := c.thc.GetRequest(fmt.Sprintf("%s?%s", c.endpoint, v.Encode()))
+	var te TimeEntries
+	if err != nil {
+		return te, err
+	}
+	if body == nil {
+		return nil, nil
+	}
+	err = json.Unmarshal(*body, &te)
+	return te, err
 }
 
 func timeEntryResponse(response *json.RawMessage, error error) (*TimeEntry, error) {

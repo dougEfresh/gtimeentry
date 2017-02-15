@@ -96,6 +96,25 @@ func TestTimeEntryGet(t *testing.T) {
 	}
 }
 
+func TestTimeEntryGetTimeRange(t *testing.T) {
+	tClient := togglClient(t)
+
+	start, _ := time.Parse(time.RFC3339, "2013-03-10T15:42:46+02:00")
+	end , _:= time.Parse(time.RFC3339, "2013-03-12T15:42:46+02:00")
+
+	te, err := tClient.GetRange(start, end)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(te) < 1 {
+		t.Fatal("<1")
+	}
+	timeentry := te[0]
+	if timeentry.Id != 4 {
+		t.Error("!= 4")
+	}
+}
+
 func BenchmarkTimeEntryClient_Get(b *testing.B) {
 	b.ReportAllocs()
 	tClient := togglClient(nil)
