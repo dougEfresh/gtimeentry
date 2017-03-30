@@ -89,8 +89,8 @@ func (c *TimeEntryClient) Update(t *TimeEntry) (*TimeEntry, error) {
 
 func (c *TimeEntryClient) GetRange(start time.Time, end time.Time) (TimeEntries, error) {
 	v := url.Values{}
-	v.Set("start", start.Format(time.RFC3339))
-	v.Set("end", end.Format(time.RFC3339))
+	v.Set("start_date", start.Format(time.RFC3339))
+	v.Set("end_date", end.Format(time.RFC3339))
 	body, err := c.thc.GetRequest(fmt.Sprintf("%s?%s", c.endpoint, v.Encode()))
 	var te TimeEntries
 	if err != nil {
